@@ -1,18 +1,18 @@
 import axios from 'axios';
-import { ScanResult } from "../models/scan-model.ts";
-import { User } from "../models/users-model.ts";
+import { ScanResult } from "../models/scan-model";
+import { User } from "../models/users-model";
 
 export const profileInfoHeadersScanner = () => {
     return { profileName: 'headers-scanner', severity: 'medium', time: new Date().toISOString(), description: 'Checks for standard security headers.' };
 }
 
-export const runHeadersScanner = async (target: string, email: string) => {
+export const runHeadersScanner = async (target: string, email: string, scanGroupId: string) => {
     const profileName = "headers-scanner";
     const user = await User.findOne({ email });
     if (!user) throw new Error("User not found");
 
     const scanResultDoc = new ScanResult({
-        target, profileName, status: "pending", user: user._id, scanResult: { findings: [] }
+        target, profileName, scanGroupId, status: "pending", user: user._id, scanResult: { findings: [] }
     });
     await scanResultDoc.save();
 

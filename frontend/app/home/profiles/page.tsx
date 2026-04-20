@@ -7,14 +7,14 @@ import ProfileList from "@/components/ProfileList";
 export default async function ProfilesPage() {
   const user = await userData()
   const email = user?.primaryEmailAddress?.emailAddress
-  
+
   let profiles = []
   let targets = []
-  
+
   try {
     const profilesRes = await axios.get('http://localhost:8080/profiles')
     profiles = profilesRes.data || []
-    
+
     if (email) {
       const targetsRes = await axios.post('http://localhost:8080/targets', { email })
       targets = targetsRes.data.data.targets || []
@@ -60,14 +60,12 @@ export default async function ProfilesPage() {
 
         <section className="grid w-full h-full">
           <main className="rounded-xl w-full h-full border border-white/8 bg-[#070b12] p-6 overflow-y-auto">
-             <div className="mb-6">
-                <h1 className="text-xl font-bold text-white">Security Profiles</h1>
-                <p className="text-sm text-zinc-500 mt-1">Configure and launch specialized security auditing engines</p>
-             </div>
-             
-             <div className="max-w-4xl">
-                <ProfileList profiles={profiles} targets={targets} />
-             </div>
+            <div className="mb-6">
+              <h1 className="text-xl font-bold text-white">Security Profiles</h1>
+              <p className="text-sm text-zinc-500 mt-1">Configure and launch specialized security auditing engines</p>
+            </div>
+
+            <ProfileList profiles={profiles} targets={targets} />
           </main>
         </section>
       </div>

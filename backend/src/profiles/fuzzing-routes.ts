@@ -1,8 +1,8 @@
 import axios from "axios";
 import fs from 'node:fs';
 import pLimit from "p-limit";
-import { ScanResult } from "../models/scan-model.ts";
-import { User } from "../models/users-model.ts";
+import { ScanResult } from "../models/scan-model";
+import { User } from "../models/users-model";
 
 const wordlistPath = './src/wordlist/Directories_All.txt';
 const profileName = "fuzzing"
@@ -16,7 +16,7 @@ const readWordlist = (): string[] => {
     return data.split('\n').map(line => line.trim()).filter(line => line.length > 0);
 }
 
-export const fuzzingDirectories = async (target: string, email: string) => {
+export const fuzzingDirectories = async (target: string, email: string, scanGroupId: string) => {
     const wordlist = readWordlist();
     const limit = pLimit(20);
 
@@ -29,6 +29,7 @@ export const fuzzingDirectories = async (target: string, email: string) => {
     const scanResultDoc = new ScanResult({
         target,
         profileName,
+        scanGroupId,
         status: "pending",
         user: user._id,
         scanResult: { findings: [] }
@@ -41,9 +42,8 @@ export const fuzzingDirectories = async (target: string, email: string) => {
     const results = await Promise.all(wordlist.map(word => limit(async () => {
         const url = `https://${target}/${word}`;
         try {
-            // validateStatus ensures axios doesn't throw on non-2xx statuses
             const response = await axios.get(url, { validateStatus: () => true, timeout: 5000 });
-            return { word, url, status: response.status };
+            return { word, url, exploit: { node: `go to ${url}` }, status: response.status };
         } catch (error: any) {
             return { word, url, status: error.response?.status || 500 };
         }
@@ -51,7 +51,6 @@ export const fuzzingDirectories = async (target: string, email: string) => {
 
     const filterResults = results.filter(result => result.status == 200 || result.status == 403 || result.status == 301);
 
-    // Save final findings
     scanResultDoc.status = "completed";
     scanResultDoc.scanResult = { findings: filterResults };
     await scanResultDoc.save();

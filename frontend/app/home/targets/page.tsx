@@ -10,6 +10,9 @@ export default async function HomePage() {
   const user = await userData()
   const targetsRequest = await axios.post('http://localhost:8080/targets', {
     email: user?.primaryEmailAddress?.emailAddress
+  }).catch((error) => {
+    console.error("Error fetching targets:", error);
+    return { data: { data: { targets: [] } } };
   })
 
   const targets = targetsRequest.data.data.targets
@@ -51,6 +54,10 @@ export default async function HomePage() {
 
         <section className="grid w-full h-full">
           <main className="rounded-xl w-full h-full border border-white/8 bg-[#070b12] p-4">
+            <div className="mb-6">
+              <h1 className="text-xl font-bold text-white">Targets</h1>
+              <p className="text-sm text-zinc-500 mt-1">Manage your targets</p>
+            </div>
             <div className="mt-4 grid w-full h-full">
               <div className="space-y-2 w-full">
                 <TargetCard targets={targets} />

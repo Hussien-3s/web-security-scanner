@@ -1,8 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import usersRouts from "./src/routes/users-routs.ts";
-import profileRouts from "./src/routes/profile-routs.ts";
+import usersRouts from "./src/routes/users-routs";
+import profileRouts from "./src/routes/profile-routs";
 import cors from "cors";
 
 

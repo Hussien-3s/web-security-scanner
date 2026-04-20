@@ -1,23 +1,14 @@
 "use client"
 
+import { Trash2, Target } from "lucide-react"
 import axios from "axios"
 import { useUser } from "@clerk/nextjs"
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"
 
 export default function TargetCard({ targets }: { targets: any[] }) {
     const user = useUser()
     const router = useRouter()
 
-    const handleScan = async (target: string) => {
-        const response = await axios.post('http://localhost:8080/startScan', {
-            target,
-            email: user?.user?.emailAddresses[0].emailAddress,
-            profileName: 'fuzzing' // Default profile
-        })
-
-        console.log(response.data)
-        router.push('/home/scans')
-    }
 
     const handleDelete = (target: string) => {
         axios.delete('http://localhost:8080/deleteTargets', {
@@ -33,16 +24,24 @@ export default function TargetCard({ targets }: { targets: any[] }) {
     return (
         <>
             {targets.map((item: any, index: number) => (
-                <article key={index} className="flex items-center justify-between rounded-md border w-full border-white/10 bg-white/[0.02] px-3 py-2.5">
-                    <div className="flex items-center gap-2.5">
+                <article key={index} className="flex items-center justify-between rounded-xl border w-full border-white/10 bg-white/[0.02] px-4 py-4 hover:bg-white/[0.04] transition-all group">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 rounded-lg bg-white/5 group-hover:bg-cyan-500/10 transition-colors">
+                            <Target size={20} className="text-zinc-400 group-hover:text-cyan-400" />
+                        </div>
                         <div>
-                            <p className="text-[15px] font-medium text-white">{item.target}</p>
-                            <p className="text-[15px] text-zinc-500">{item.description}</p>
+                            <p className="text-sm font-semibold text-white">{item.target}</p>
+                            <p className="text-xs text-zinc-500 mt-1">{item.description}</p>
                         </div>
                     </div>
-                    <div>
-                        <button onClick={() => handleScan(item.target)} className="bg-cyan-300 hover:bg-cyan-600 text-black rounded-sm font-bold text-sm h-10 px-6 transition-all duration-300 shadow-[0_0_15px_rgba(37,99,235,0.4)]">Scan</button>
-                        <button onClick={() => handleDelete(item.target)} className="bg-red-600 hover:bg-red-300 text-black ml-3 rounded-sm font-bold text-sm h-10 px-6 transition-all duration-300 shadow-[0_0_15px_rgba(37,99,235,0.4)]">Delete</button>
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => handleDelete(item.target)}
+                            className="flex items-center gap-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 rounded-lg font-bold text-xs h-9 px-4 transition-all duration-300"
+                        >
+                            <Trash2 size={14} />
+                            Delete
+                        </button>
                     </div>
                 </article>
             ))}

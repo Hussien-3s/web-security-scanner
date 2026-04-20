@@ -1,6 +1,6 @@
-import { profileInfo } from "./fuzzing-routes.ts";
-import { profileInfoPortScanner } from "./port-scanner.ts";
-import { profileInfoHeadersScanner } from "./headers-scanner.ts";
+import { profileInfo } from "./fuzzing-routes";
+import { profileInfoPortScanner } from "./port-scanner";
+import { profileInfoHeadersScanner } from "./headers-scanner";
 
 export const readProfiles = () => {
     const profiles = [

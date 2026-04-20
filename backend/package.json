@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "Backend for Web Security Scanner",
   "type": "module",
-  "main": "server.js",
+  "main": "server.ts",
   "scripts": {
-    "start": "ts-node server.ts",
-    "dev": "nodemon --exec ts-node server.ts"
+    "start": "tsx server.ts",
+    "dev": "nodemon --exec tsx server.ts --ext ts"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +24,7 @@
     "@types/express": "^5.0.6",
     "@types/node": "^25.5.2",
     "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
     "typescript": "^6.0.2"
   }
 }
